@@ -1,13 +1,13 @@
 zotero:
   user_id: 14695273 # User ID of your Zotero account.
-  api_key: qH6GyGEOJyU5Ul2IGo7z3mFz # An Zotero API key with read access.
+  api_key: apSHDPLx86hfT1e8nJqc3Rfn # An Zotero API key with read access.
   include_path: null # A list of glob patterns marking the Zotero collections that should be included. Example: ["2026/survey/**","2026/reading-group/**"]
   ignore_path: null # A list of glob patterns marking the Zotero collections that should be excluded. Example: ["2026/ignore/**","archive/**"]
 
 source:
   arxiv:
-    category: null # The categories of target arxiv papers. Find the abbr of your research area from [here](https://arxiv.org/category_taxonomy). Example: ["cs.AI","cs.CV","cs.LG","cs.CL"]
-    include_cross_list: false # Whether to include arXiv cross-list papers in subscribed categories. Example: true
+    category: ["math.DG","math.AP"] # The categories of target arxiv papers. Find the abbr of your research area from [here](https://arxiv.org/category_taxonomy). Example: ["cs.AI","cs.CV","cs.LG","cs.CL"]
+    include_cross_list: true # Whether to include arXiv cross-list papers in subscribed categories. Example: true
   biorxiv:
     category: null # The categories of target biorxiv papers. Find categories from [here](https://www.biorxiv.org/). Example: ["biochemistry","animal behavior and cognition"]
   medrxiv:
@@ -18,7 +18,7 @@ email:
   receiver: jycui23@m.fudan.edu.cn # The email account that receives the paper list. Example: abc@outlook.com
   smtp_server: smtp.qq.com # The SMTP server that sends the email. Ask your email provider (Gmail, QQ, Outlook, ...) for its SMTP server. Example: smtp.qq.com
   smtp_port: 465 # The port of SMTP server. Example: 465
-  sender_password: mimamizihnvoicgj # The password of the sender account. Note that it's not necessarily the password for logging in the e-mail client, but the authentication code for SMTP service. Ask your email provider for this. Example: abcdefghijklmn
+  sender_password: zmuurtxymxhbjeeg # The password of the sender account. Note that it's not necessarily the password for logging in the e-mail client, but the authentication code for SMTP service. Ask your email provider for this. Example: abcdefghijklmn
 
 llm:
   api:
@@ -27,7 +27,7 @@ llm:
   generation_kwargs:
   # Arguments for the LLM API. See [here](https://platform.openai.com/docs/api-reference/chat/create) for more details.
     max_tokens: 16384
-    model: gpt-4o-mini
+    model: Qwen.Qwen2.5-7B-Instruct
   language: English # Preferred language for the TL;DR. Example: English
 
 reranker:
@@ -38,10 +38,10 @@ reranker:
       task: retrieval
       prompt_name: document
   api:
-    key: null # API Key of your embedding model API. Example: sk-xxx
-    base_url: null # API URL of your embedding model API. Example: https://api.openai.com/v1
-    model: null # The model name of the embedding model. Example: text-embedding-3-large
-    batch_size: null # The batch size for embedding API requests. Adjust to match your provider's limit. Example: 64
+    key: sk-soxcdhivvtspnmopfptqzcqdfkwokqdjrpfxazwhkxruaqam # API Key of your embedding model API. Example: sk-xxx
+    base_url: https://api.siliconflow.cn/v1 # API URL of your embedding model API. Example: https://api.openai.com/v1
+    model: Qwen.Qwen2.5-7B-Instruct # The model name of the embedding model. Example: text-embedding-3-large
+    batch_size: 64 # The batch size for embedding API requests. Adjust to match your provider's limit. Example: 64
 
 executor:
   debug: false # Whether to use debug mode. Example: true
