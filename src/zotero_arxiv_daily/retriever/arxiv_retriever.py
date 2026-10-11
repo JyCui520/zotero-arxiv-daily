@@ -131,7 +131,7 @@ class ArxivRetriever(BaseRetriever):
                 headers={
                     "User-Agent": "ZoteroArxivDaily/1.0"
                 },
-            )
+                 )
                 response.raise_for_status()
 
                 feed = feedparser.parse(response.content)
