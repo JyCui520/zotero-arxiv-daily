@@ -132,36 +132,36 @@ class ArxivRetriever(BaseRetriever):
                     "User-Agent": "ZoteroArxivDaily/1.0"
                 },
             )
-            response.raise_for_status()
+                response.raise_for_status()
 
-            feed = feedparser.parse(response.content)
+                feed = feedparser.parse(response.content)
 
-            logger.info(
-                f"arXiv RSS: HTTP {response.status_code}, "
-                f"entries={len(feed.entries)}, "
-                f"bozo={feed.bozo}"
-            )
-
-            if feed.bozo:
-                logger.warning(
-                    f"RSS parsing warning: "
-                    f"{feed.get('bozo_exception')}"
+                logger.info(
+                    f"arXiv RSS: HTTP {response.status_code}, "
+                    f"entries={len(feed.entries)}, "
+                    f"bozo={feed.bozo}"
                 )
 
-            if not feed.entries:
+                if feed.bozo:
+                    logger.warning(
+                        f"RSS parsing warning: "
+                        f"{feed.get('bozo_exception')}"
+                    )
+
+                if not feed.entries:
+                    logger.warning(
+                        "arXiv RSS returned no entries"
+                    )
+
+                break
+
+            except requests.RequestException as exc:
                 logger.warning(
-                    "arXiv RSS returned no entries"
+                    f"RSS attempt {attempt + 1}/3 failed: {exc}"
                 )
-
-            break
-
-        except requests.RequestException as exc:
-            logger.warning(
-                f"RSS attempt {attempt + 1}/3 failed: {exc}"
-            )
-            if attempt == 2:
-                raise
-            sleep(10 * (attempt + 1))
+                if attempt == 2:
+                    raise
+                sleep(10 * (attempt + 1))
         
         if 'Feed error for query' in feed.feed.title:
             raise Exception(f"Invalid ARXIV_QUERY: {query}.")
