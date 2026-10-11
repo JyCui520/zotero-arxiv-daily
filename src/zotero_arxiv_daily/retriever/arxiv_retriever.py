@@ -118,7 +118,51 @@ class ArxivRetriever(BaseRetriever):
         query = '+'.join(self.config.source.arxiv.category)
         include_cross_list = self.config.source.arxiv.get("include_cross_list", False)
         # Get the latest paper from arxiv rss feed
-        feed = feedparser.parse(f"https://rss.arxiv.org/atom/{query}")
+        #feed = feedparser.parse(f"https://rss.arxiv.org/atom/{query}")
+        
+        rss_url = f"https://rss.arxiv.org/atom/{query}"
+        feed = None
+
+        for attempt in range(3):
+            try:
+                response = requests.get(
+                rss_url,
+                timeout=30,
+                headers={
+                    "User-Agent": "ZoteroArxivDaily/1.0"
+                },
+            )
+            response.raise_for_status()
+
+            feed = feedparser.parse(response.content)
+
+            logger.info(
+                f"arXiv RSS: HTTP {response.status_code}, "
+                f"entries={len(feed.entries)}, "
+                f"bozo={feed.bozo}"
+            )
+
+            if feed.bozo:
+                logger.warning(
+                    f"RSS parsing warning: "
+                    f"{feed.get('bozo_exception')}"
+                )
+
+            if not feed.entries:
+                logger.warning(
+                    "arXiv RSS returned no entries"
+                )
+
+            break
+
+        except requests.RequestException as exc:
+            logger.warning(
+                f"RSS attempt {attempt + 1}/3 failed: {exc}"
+            )
+            if attempt == 2:
+                raise
+            sleep(10 * (attempt + 1))
+        
         if 'Feed error for query' in feed.feed.title:
             raise Exception(f"Invalid ARXIV_QUERY: {query}.")
         raw_papers = []
